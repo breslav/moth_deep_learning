@@ -4,10 +4,19 @@
 
 addpath('Z:/Moth');
 
-%load train/testing data
-load('moth_example/training_testing_split_421.mat')
+%load annotations
 load('moth_example/SavedAnnotations/cam1_annotations_pts.mat');
 
+%set train/testing split
+orig_split = false; %boolean to determine whether we want to use the original training/testing split used in WACV16 experiments
+
+if orig_split
+    load('moth_example/training_testing_split_421.mat')
+else
+    cam1_state_pts = cell2mat(cam_state_save);
+    training_idx = 1:1:400;
+end
+    
 %training_idx / testing_idx are relative to the frames
 
 num_training = length(training_idx);
@@ -20,7 +29,7 @@ training_set = zeros(600,800,num_training); %store whole training set resized to
 training_label_set = zeros(8,num_training);
 training_bbox = zeros(4,num_training);
 
-%first store all ~200 training images in their basic form.
+%first store all num_training images in their basic form.
 for i=1:1:num_training
     im = uint16(imread(['Cam1_Images/',num2str(cam1_state_pts(training_idx(i),1)),'.png'])); 
     result_bbox = getMothBoundingBox2(im,1); %get tight bounding box on moth
