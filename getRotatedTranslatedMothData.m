@@ -28,7 +28,7 @@ for j=1:1:num_samples
     
     valid_rotation = false;
     
-    if(~strcmp(aug_type,'none')) %do random rotation and translation
+    if(strcmp(aug_type,'tr')) %do random translations and rotations 
         
         while ~valid_rotation
         
@@ -74,7 +74,18 @@ for j=1:1:num_samples
         sample_training_im = rotated_im(r:r+crop_h-1,c:c+crop_w-1);
         sample_training_label = rotated_labels - [c-1 r-1 c-1 r-1 c-1 r-1 c-1 r-1];
         
-    else
+    elseif strcmp(aug_type,'t') %do translations alone
+        
+        [left_range,top_range] = computeCropRanges(result_bbox,w,h,crop_w,crop_h); %get crop ranges for 400 x 600 crop
+        
+        c = randi(left_range,1,1); %randomly pick a column
+        r = randi(top_range,1,1); %randomly pick a row
+   
+        sample_training_im = im(r:r+crop_h-1,c:c+crop_w-1);
+        sample_training_label = training_label - [c-1 r-1 c-1 r-1 c-1 r-1 c-1 r-1];
+        
+        
+    else %no transformation
         [left_range,top_range] = computeCropRanges(result_bbox,w,h,crop_w,crop_h); %get crop ranges for 400 x 600 crop
 
         %get centered crop
@@ -83,6 +94,7 @@ for j=1:1:num_samples
         sample_training_im = im(r:r+crop_h-1,c:c+crop_w-1);
         sample_training_label = training_label - [c-1 r-1 c-1 r-1 c-1 r-1 c-1 r-1];
     end
+    
 
     if(debug_flag)
         figure(1);clf;imagesc(sample_training_im); colormap gray; hold on;    

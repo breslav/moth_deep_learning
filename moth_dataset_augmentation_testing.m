@@ -26,7 +26,7 @@ for i=1:1:num_testing
     im = uint16(imread(['Cam1_Images/',num2str(cam1_state_pts(testing_idx(i),1)),'.png'])); 
     
     result_bbox = getMothBoundingBox2(im,1); %get tight bounding box on moth
-    label = cam1_state_pts(testing_idx(i),2:9);
+    label = abs(cam1_state_pts(testing_idx(i),2:9));
     
     [data,labels] = getTranslatedMothData(im,result_bbox,num_samples,label); %get a bunch of crops
     
