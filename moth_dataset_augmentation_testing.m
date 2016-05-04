@@ -4,11 +4,18 @@
 
 addpath('Z:/Moth');
 
-%load train/testing data
-load('moth_example/training_testing_split_421.mat')
+%load annotations
 load('moth_example/SavedAnnotations/cam1_annotations_pts.mat');
 
-%training_idx / testing_idx are relative to the frames
+%set train/testing split
+orig_split = false; %boolean to determine whether we want to use the original training/testing split used in WACV16 experiments
+
+if orig_split
+    load('moth_example/training_testing_split_421.mat')
+else
+    cam1_state_pts = cell2mat(cam_state_save);
+    testing_idx = 401:1:800;
+end
 
 num_testing = length(testing_idx);
 
