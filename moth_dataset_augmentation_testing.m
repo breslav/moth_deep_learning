@@ -21,9 +21,11 @@ num_testing = length(testing_idx);
 
 num_samples = num_testing;
 
+%storage in caffe format (num samples x num channels x H x W)
 testing_data = zeros(num_samples, 3, 224, 224);
 testing_label = zeros(num_samples, 1, 1, 8);
 
+%bgr channel offsets, network specific
 vgg_16_bgr = [103.939, 116.779, 123.68];
 
 label_scale = repmat([224/600 224/400],1,4); 
@@ -37,6 +39,7 @@ for i=1:1:num_testing
     
     [data,labels] = getTranslatedMothData(im,result_bbox,num_samples,label); %get a bunch of crops
     
+    %pre-processing
     im = double(im);
     %turn into RGB 8 bit?
     min_val = min(im(:));
@@ -63,6 +66,7 @@ for i=1:1:num_testing
  
 end
 
+%for writing to hdf5 file we reverse dimension order.
 permuted_testing_data = permute(testing_data,[4 3 2 1]); %hdf5 needs transposed version?
 permuted_testing_label = permute(testing_label,[4 3 2 1]);
 
