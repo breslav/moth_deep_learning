@@ -27,6 +27,7 @@ augmented_training_labels = zeros(1,8,num_samples);
 for j=1:1:num_samples
     
     valid_rotation = false;
+    valid_scale = false;
     
     if(strcmp(aug_type,'tr')) %do random translations and rotations 
         
@@ -83,7 +84,45 @@ for j=1:1:num_samples
    
         sample_training_im = im(r:r+crop_h-1,c:c+crop_w-1);
         sample_training_label = training_label - [c-1 r-1 c-1 r-1 c-1 r-1 c-1 r-1];
+    elseif strcmp(aug_type,'ts') %do translations and scale
         
+        while ~valid_scale
+        
+        sf = .5 + rand(); %pick a random scale factor in [.5 1.5] 
+        
+        im_scaled = imresize(im,sf,'bicubic'); %randomly scale original image. Anti-aliasing is done internally.
+        result_bbox_scaled = round(sf*result_bbox); 
+        
+        bbox_s_w = result_bbox_scaled(4) - result_bbox_scaled(3) + 1;
+        bbox_s_h = result_bbox_scaled(2) - result_bbox_scaled(1) + 1;
+        
+        %need to know whether resized bbox is larger than the crop size of 400 x 600
+        if( (bbox_s_w > crop_w) || (bbox_s_h > crop_h) )
+            continue;
+        else
+            valid_scale = true;
+        end
+        
+        %if SF > 1 then we want to compute potential crops with respect to larger sized image
+        %if SF <=1 then we want to compute potential crops with respect to original image, not the smaller one
+        
+        if(sf > 1)
+            [left_range,top_range] = computeCropRanges(result_bbox_scaled,size(im_scaled,2),size(im_scaled,1),crop_w,crop_h); %get crop ranges for 400 x 600 crop
+            im_full = im_scaled;
+        else %sf <=1
+            [left_range,top_range] = computeCropRanges(result_bbox_scaled,w,h,crop_w,crop_h); %get crop ranges for 400 x 600 crop
+            im_full = zeros(h,w);
+            im_full(1:size(im_scaled,1),1:size(im_scaled,2)) = im_scaled;
+            
+        end
+        
+        c = randi(left_range,1,1); %randomly pick a column
+        r = randi(top_range,1,1); %randomly pick a row
+   
+        sample_training_im = im_full(r:r+crop_h-1,c:c+crop_w-1);
+        sample_training_label = sf*training_label - [c-1 r-1 c-1 r-1 c-1 r-1 c-1 r-1];
+        
+        end
         
     else %no transformation
         [left_range,top_range] = computeCropRanges(result_bbox,w,h,crop_w,crop_h); %get crop ranges for 400 x 600 crop

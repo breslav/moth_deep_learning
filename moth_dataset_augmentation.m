@@ -29,6 +29,9 @@ training_set = zeros(600,800,num_training); %store whole training set resized to
 training_label_set = zeros(8,num_training);
 training_bbox = zeros(4,num_training);
 
+%SET AUGMENTATION TYPE
+aug_type = 'ts'; 
+
 %first store all num_training images in their basic form.
 for i=1:1:num_training
     im = uint16(imread(['Cam1_Images/',num2str(cam1_state_pts(training_idx(i),1)),'.png'])); 
@@ -95,7 +98,7 @@ for i=1:1:num_batches
             label = training_label_set(:,j)'; 
             im_8_bit = training_set(:,:,j);
             bbox = training_bbox(:,j)';
-            [aug_training_images, aug_training_labels] = getRotatedTranslatedMothData(im_8_bit,bbox,label,1,'aug_type','tr','debug_flag',false);
+            [aug_training_images, aug_training_labels] = getRotatedTranslatedMothData(im_8_bit,bbox,label,1,'aug_type',aug_type,'debug_flag',false);
             
             [b,g,r] = convertImToCaffe(double(aug_training_images),vgg_16_bgr);
             
@@ -118,7 +121,7 @@ for i=1:1:num_batches
             label = training_label_set(:,j)'; 
             im_8_bit = training_set(:,:,j);
             bbox = training_bbox(:,j)';
-            [aug_training_images, aug_training_labels] = getRotatedTranslatedMothData(im_8_bit,bbox,label,1,'aug_type','tr','debug_flag',false);
+            [aug_training_images, aug_training_labels] = getRotatedTranslatedMothData(im_8_bit,bbox,label,1,'aug_type',aug_type,'debug_flag',false);
             
             [b,g,r] = convertImToCaffe(double(aug_training_images),vgg_16_bgr);
             
