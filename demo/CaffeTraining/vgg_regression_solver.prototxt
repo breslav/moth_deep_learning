@@ -1,0 +1,33 @@
+net: "/research/bats3/Breslav/deeplearning/moth_example/experiments/training_samples/vgg_regression_train_val.prototxt"
+
+#number of iterations to perform during testing, with one iteration going through a test batch size
+test_iter: 40
+
+#how frequently to perform testing e.g every x training iterations
+test_interval: 500
+
+# base learning rate
+base_lr: 0.000000000001
+lr_policy: "step"
+gamma: 0.1
+stepsize: 10000
+
+#how often to display training loss
+display: 200
+
+#also provide average loss over a window of 200 iterations
+average_loss: 200
+
+#maximum number of training iterations
+max_iter: 10000
+
+momentum: 0.9
+weight_decay: 0.001
+
+#save weights/biases of network every x training iterations
+snapshot: 1000
+
+#save directory
+snapshot_prefix: "/research/bats3/Breslav/deeplearning/moth_example/experiments/"
+# uncomment the following to default to CPU mode solving
+# solver_mode: CPU
