@@ -1,9 +1,10 @@
 %generate hdf5 locations test/train
 
-f = fopen('./moth_example/experiments/training_samples/train_file_location_t_20k_rand_epoch.txt','w');
+% f = fopen('./moth_example/experiments/architectures/train_file_location_t_200k_rand_epoch.txt','w');
+f = fopen('./moth_example/experiments/training_samples/train_file_location_t_1k.txt','w');
 
 
-randomize_epochs = true;
+randomize_epochs = false;
 
 total_iterations = 10000;
 batch_size = 32;
@@ -13,7 +14,7 @@ hdf5_size = 1000; %number of samples in a single hdf5 file
 
 if(~ randomize_epochs)
 
-    num_hdf5_batches = 20;
+    num_hdf5_batches = 1;
 
     for i=1:1:num_hdf5_batches
        if( i < num_hdf5_batches)
@@ -23,7 +24,7 @@ if(~ randomize_epochs)
        end
     end
 else %want to shuffle hdf5 files across multiple epochs
-    num_hdf5_batches_orig = 20;
+    num_hdf5_batches_orig = 50;
 
     for i=1:1:num_hdf5_batches_orig
             fprintf(f,['/research/bats3/Breslav/deeplearning/moth_example/hdf5_data/t/moth_train_',num2str(i),'.hdf5\n']); 

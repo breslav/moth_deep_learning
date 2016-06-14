@@ -1,7 +1,7 @@
 
 function  result_bbox = getMothBoundingBox2(cdata,view_id)
 
-debug_flag = 1;
+debug_flag = 0;
 
 cdata = double(cdata);
 x_deriv_filter = [1 0 -1];

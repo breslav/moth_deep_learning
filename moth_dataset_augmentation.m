@@ -98,7 +98,7 @@ for i=1:1:num_batches
             label = training_label_set(:,j)'; 
             im_8_bit = training_set(:,:,j);
             bbox = training_bbox(:,j)';
-            [aug_training_images, aug_training_labels] = getRotatedTranslatedMothData(im_8_bit,bbox,label,1,'aug_type',aug_type,'debug_flag',false);
+            [aug_training_images, aug_training_labels] = getRotatedTranslatedMothData(im_8_bit,bbox,label,1,'aug_type',aug_type,'debug_flag',true);
             
             [b,g,r] = convertImToCaffe(double(aug_training_images),vgg_16_bgr);
             
